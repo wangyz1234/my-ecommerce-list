@@ -12,7 +12,7 @@ const Pagination = ({ currentPage, totalPages, totalItems, pageSize, onPageChang
     return (
         <div className="pagination-container">
             <div className="pagination-info">
-                分页：上一页 {currentPage} / {totalPages} 页 | 总共 {totalItems} 件商品 | 每页数量: {pageSize}
+                {currentPage} / {totalPages} 页 | 总共 {totalItems} 件商品 | 每页数量: {pageSize}
             </div>
             
             <button 

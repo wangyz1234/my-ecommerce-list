@@ -1,31 +1,19 @@
 import { useMemo } from 'react';
 import { createSlice } from '@reduxjs/toolkit';
-
-// 模拟所有商品数据
-const MOCK_ALL_PRODUCTS = [
-  { id: 1, name: '高性能笔记本电脑 (2025款)', price: 10999, sales: 1200, category: 'Electronics', tags: ['新品', '高端'] },
-  { id: 2, name: '畅销算法导论 (第4版)', price: 120, sales: 640, category: 'Books', tags: ['热销'] },
-  { id: 3, name: '专业机械键盘 (红轴)', price: 899, sales: 980, category: 'Electronics', tags: ['热销'] },
-  { id: 4, name: '高品质男士纯棉衬衫', price: 299, sales: 2300, category: 'Clothing', tags: ['折扣'] },
-  { id: 5, name: '经典女装针织衫', price: 320, sales: 5100, category: 'Clothing', tags: ['热销'] },
-  { id: 6, name: '简约风木质书架', price: 450, sales: 590, category: 'Home', tags: ['新品'] },
-  { id: 7, name: '高清降噪耳机', price: 1299, sales: 349, category: 'Electronics', tags: ['折扣'] },
-  { id: 8, name: '经典小说套装 (全10册)', price: 199, sales: 349, category: 'Books', tags: ['新品'] },
-  { id: 9, name: '运动跑鞋 (透气款)', price: 599, sales: 510, category: 'Clothing', tags: ['折扣'] },
-];
+import mockProducts from '../data/mock.json';
 
 export const initialState = {
-    allItems: MOCK_ALL_PRODUCTS, 
-    status: 'succeeded', 
-    
-    // 筛选/排序/分页条件
-    filterCategories: ['男装', '女装', '童装', '鞋靴'], 
-    selectedCategories: [], 
-    priceRange: [0, 99999], 
-    sortBy: 'price',        
-    sortOrder: 'desc',      
-    currentPage: 1,
-    pageSize: 6,            
+  allItems: mockProducts, 
+  status: 'succeeded',
+  
+  // 筛选/排序/分页条件
+  filterCategories: Array.from(new Set(mockProducts.map(p => p.category))), 
+  selectedCategories: [], 
+  priceRange: [0, 99999], 
+  sortBy: 'price',        
+  sortOrder: 'desc',      
+  currentPage: 1,
+  pageSize: 10,            
 };
 
 const productsSlice = createSlice({

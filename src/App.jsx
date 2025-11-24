@@ -27,7 +27,7 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-200 font-sans">
+    <div>
       {/* 导航栏 */}
       <Navbar />
 

@@ -19,6 +19,9 @@ const ProductListGrid = ({ pagedItems, totalItems, status, sortBy, sortOrder, di
         dispatch({ type: 'products/setSort', payload: { key, order: newOrder } });
     };
 
+    // 安全防护：保证 items 为数组
+    const items = Array.isArray(pagedItems) ? pagedItems : [];
+
     return (
         <div className="product-grid-container">
             {/* 排序控制 */}
@@ -47,15 +50,15 @@ const ProductListGrid = ({ pagedItems, totalItems, status, sortBy, sortOrder, di
                     <div className="loading-state">加载中: 列表骨架卡片占位...</div>
                 )}
                 
-                {status === 'succeeded' && pagedItems.length === 0 && (
+                {status === 'succeeded' && items.length === 0 && (
                     <div className="empty-state">
                         空态: 未命中筛选条件时显示此空态信息。请尝试修改条件或返回。
                     </div>
                 )}
                 
                 {/* Grid 布局渲染商品卡片 */}
-                <div className="product-grid">
-                    {pagedItems.map(product => (
+                <div className="product-grid" role="list">
+                    {items.map(product => (
                         <ProductCard key={product.id} product={product} />
                     ))}
                 </div>

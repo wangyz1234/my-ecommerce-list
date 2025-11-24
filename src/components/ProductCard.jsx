@@ -19,7 +19,7 @@ const ProductCard = ({ product }) => (
 
         {/* 销量 */}
         <p className="product-sales">
-            销量 {Math.round((product.sales || 0) / 1000)}K
+            销量 {product.sales ?? 0}
         </p>
 
         {/* 标签 */}
