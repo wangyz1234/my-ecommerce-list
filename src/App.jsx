@@ -1,29 +1,32 @@
-import React, { useReducer } from 'react';
 import './index.css';
 import Navbar from './components/Navbar.jsx';
 import ProductListGrid from './components/ProductListGrid.jsx';
 import FilterComponent from './components/FilterComponent.jsx';
 import Pagination from './components/Pagination.jsx';
-import productsReducer, { initialState, useProductsSelectors } from './store/productsSlice.jsx';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { useProductsSelectors } from './store/productsSlice.jsx';
+import { setCurrentPage } from './store/productsSlice';
 const App = () => {
-  // 模拟 Redux Store (State & Dispatch)
-  const [state, dispatch] = useReducer(productsReducer, initialState);
-  
-  // 模拟 Redux Selectors (派生数据)
-  const { 
-    pagedItems, 
-    totalPages, 
-    totalFilteredItemsCount, 
-    currentPage,
-    pageSize,
-    status,
-    sortBy,
-  sortOrder
+  const dispatch = useDispatch();
+
+  // 从 Redux store 读取原始状态
+  const state = useSelector(state => state.products);
+
+  // 使用 selector 派生计算数据（筛选、排序、分页）
+  const {
+    pagedItems,
+    totalFilteredItemsCount,
+    totalPages,
   } = useProductsSelectors(state);
 
+  // 从 state 直接读取当前页、排序条件、状态等
+  const { currentPage, sortBy, sortOrder, status, pageSize } = state;
+
+  // 分页处理
   const handlePageChange = (page) => {
-    dispatch({ type: 'products/setCurrentPage', payload: page });
+    if (page > 0 && page <= totalPages) {
+      dispatch(setCurrentPage(page));
+    }
   };
 
   return (
@@ -31,11 +34,11 @@ const App = () => {
       {/* 导航栏 */}
       <Navbar />
 
-      <main style={{ display: 'flex', flexDirection: 'row'}}>
-        {/* 筛选组件 (通用组件) */}
+      <main style={{ display: 'flex', flexDirection: 'row' }}>
+        {/* 筛选组件：传递 state 和 dispatch，组件内部调用 reducer */}
         <FilterComponent state={state} dispatch={dispatch} />
-        
-        {/* 商品列表区域 (业务组件 & 排序) */}
+
+        {/* 商品列表区域 */}
         <div className="flex-1 flex flex-col">
           <ProductListGrid
             pagedItems={pagedItems}
@@ -45,8 +48,8 @@ const App = () => {
             sortOrder={sortOrder}
             dispatch={dispatch}
           />
-            
-          {/* 分页器 (通用组件) */}
+
+          {/* 分页器 */}
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

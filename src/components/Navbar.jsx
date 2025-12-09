@@ -1,4 +1,4 @@
-import { CartIcon } from '../icons';
+
 
 const Navbar = () => {
   

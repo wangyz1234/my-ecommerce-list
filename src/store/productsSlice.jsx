@@ -20,16 +20,20 @@ const productsSlice = createSlice({
     name: 'products',
     initialState,
     reducers: {
-        setCategory: (state, action) => {
+        setCategory: (state, action) => { //设置分类
             const category = action.payload;
-            const newCategories = state.selectedCategories.includes(category)
-                ? state.selectedCategories.filter(c => c !== category)
-                : [...state.selectedCategories, category];
+            const newCategories = state.selectedCategories.includes(category) 
+                ? state.selectedCategories.filter(c => c !== category) //已经选过的类型所以再次点击就是把选择的类型删除
+                : [...state.selectedCategories, category]; //没有选过的话就添加
             state.selectedCategories = newCategories;
             state.currentPage = 1; 
         },
         setPriceRange: (state, action) => {
-            state.priceRange = action.payload;
+            state.priceRange = action.payload; 
+            state.currentPage = 1;
+        },
+        refreshPriceRange: (state) => {
+            state.priceRange = [0, 99999];
             state.currentPage = 1;
         },
         setSort: (state, action) => {
@@ -43,20 +47,20 @@ const productsSlice = createSlice({
     },
 });
 
-export const { setCategory, setPriceRange, setSort, setCurrentPage } = productsSlice.actions;
+export const { setCategory, setPriceRange, refreshPriceRange, setSort, setCurrentPage } = productsSlice.actions;
 
 export default productsSlice.reducer;
 
 const useProductsSelectors = (state) => {
     // 基础输入
-    const { allItems, selectedCategories, priceRange, sortBy, sortOrder, currentPage, pageSize } = state;
+    const safeState = state || initialState;
+    const { allItems, selectedCategories, priceRange, sortBy, sortOrder, currentPage, pageSize } = safeState;
 
     // --- 第一步：筛选 (Filtering) ---
     const filteredItems = useMemo(() => {
         return allItems.filter(item => {
             // 1. 分类筛选 (如果未选择任何分类，则不过滤)
-            const categoryMatch = selectedCategories.length === 0 || 
-                                  selectedCategories.some(c => item.category.includes(c.substring(0, 2))); // 简单匹配前两位字
+            const categoryMatch = selectedCategories.length === 0 || selectedCategories.some(c => item.category.includes(c.substring(0, 2))); // 简单匹配前两位字
             
             // 2. 价格区间筛选
             const priceMatch = item.price >= priceRange[0] && item.price <= priceRange[1];
